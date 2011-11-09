@@ -1,3 +1,5 @@
+.PHONY: test
+
 REBAR := $(shell which rebar || echo $(PWD)/tools/rebar)
 
 all: compile test
@@ -5,8 +7,8 @@ all: compile test
 compile:
 	@$(REBAR) compile
 
-test:
-	@$(REBAR) eunit
+test: compile
+	@$(REBAR) ct
 
 clean:
 	@$(REBAR) clean
