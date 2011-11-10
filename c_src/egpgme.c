@@ -92,4 +92,4 @@ static ErlNifFunc egpgme_funcs[] = {
     {"context", 0, egpgme_context_new}
 };
 
-ERL_NIF_INIT(egpgme, egpgme_funcs, &on_load, NULL, NULL, NULL);
+ERL_NIF_INIT(egpgme, egpgme_funcs, &on_load, NULL, NULL, NULL)
