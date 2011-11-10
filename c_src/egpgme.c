@@ -12,10 +12,6 @@ enum {
     EGPGME_LAST
 };
 
-static ErlNifResourceType *egpgme_resources[EGPGME_LAST] = {
-    NULL
-};
-
 typedef struct {
     gpgme_ctx_t ctx;
 } egpgme_context;
@@ -53,21 +49,32 @@ static ERL_NIF_TERM _egpgme_ok(ErlNifEnv *env, ERL_NIF_TERM result) {
 }
 
 ERL_NIF_TERM egpgme_context_new(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    egpgme_context *ctx = (egpgme_context *)enif_alloc_resource(egpgme_resources[EGPGME_CONTEXT], sizeof(egpgme_context));
-    gpgme_error_t err = gpgme_new(&(ctx->ctx));
+    gpgme_ctx_t ctx;
+    gpgme_error_t err = gpgme_new(&ctx);
 
     if (err) {
         return _egpgme_error(env, err);
     } else {
-        ERL_NIF_TERM result = enif_make_resource(env, ctx);
+        ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
+        egpgme_context *e_ctx = (egpgme_context *)enif_alloc_resource(egpgme_resources[EGPGME_CONTEXT], sizeof(egpgme_context));
+        ERL_NIF_TERM result;
 
-        enif_release_resource(ctx);
+        e_ctx->ctx = ctx;
+        result = enif_make_resource(env, e_ctx);
+
+        enif_release_resource(e_ctx);
 
         return _egpgme_ok(env, result);
     }
 }
 
-static int on_load(ErlNifEnv *env, void** priv_data, ERL_NIF_TERM load_info) {
+static int on_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM load_info) {
+    ErlNifResourceType **egpgme_resources = NULL;
+
+    if ((egpgme_resources = calloc(EGPGME_LAST, sizeof(ErlNifResourceType *))) == NULL) {
+        return 1;
+    }
+
     gpgme_check_version(NULL);
     gpgme_set_locale(NULL, LC_CTYPE, setlocale(LC_CTYPE, NULL));
 #ifdef LC_MESSAGES
@@ -85,6 +92,9 @@ static int on_load(ErlNifEnv *env, void** priv_data, ERL_NIF_TERM load_info) {
         enif_open_resource_type(env, EGPGME_MODULE_STR, "key",
                                 egpgme_key_delete,
                                 ERL_NIF_RT_CREATE | ERL_NIF_RT_TAKEOVER, NULL);
+
+    *priv_data = egpgme_resources;
+
     return 0;
 }
 
