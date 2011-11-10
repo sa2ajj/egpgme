@@ -20,9 +20,8 @@ typedef struct {
 } egpgme_context;
 
 static ERL_NIF_TERM _egpgme_error(ErlNifEnv *env, gpgme_error_t err) {
-    ERL_NIF_TERM source = gpgme_err_source(err);
-    ERL_NIF_TERM code = gpgme_err_code(err);
-    // TODO: add extraction of error message
+    ERL_NIF_TERM source = enif_make_int(env, gpgme_err_source(err));
+    ERL_NIF_TERM code = enif_make_int(env, gpgme_err_code(err));
     ERL_NIF_TERM result = enif_make_tuple2(env, source, code);
 
     return enif_make_tuple2(env, enif_make_atom(env, "error"), result);
