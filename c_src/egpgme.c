@@ -34,6 +34,39 @@ static void egpgme_data_delete(ErlNifEnv *env, void *arg) {
 
 static void egpgme_key_delete(ErlNifEnv *env, void *arg) {
     gpgme_key_release(((egpgme_key *)arg)->key);
+
+static ERL_NIF_TERM _egpgme_strerror(ErlNifEnv *env, gpgme_error_t err) {
+    char *message = enif_alloc(512);
+    ERL_NIF_TERM result;
+
+    // No check for return value as gpgme_strerror_r truncates the output
+    gpgme_strerror_r(err, message, 512);
+
+    result = enif_make_tuple2(env,
+                              enif_make_string(env, gpgme_strsource(err), ERL_NIF_LATIN1),
+                              enif_make_string(env, message, ERL_NIF_LATIN1));
+    enif_free(message);
+
+    return result;
+}
+
+ERL_NIF_TERM egpgme_strerror(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    int size;
+    const ERL_NIF_TERM *tuple;
+    int source, code;
+
+    // Check if we got a tuple of the right size
+    if (!enif_get_tuple(env, argv[0], &size, &tuple) || size != 2) {
+        return enif_make_badarg(env);
+    }
+
+    // Check if we got ints
+    if (!enif_get_int(env, tuple[0], &source) ||
+        !enif_get_int(env, tuple[1], &code)) {
+        return enif_make_badarg(env);
+    }
+
+    return _egpgme_strerror(env, gpgme_err_make(source, code));
 }
 
 static ERL_NIF_TERM _egpgme_error(ErlNifEnv *env, gpgme_error_t err) {
@@ -99,6 +132,7 @@ static int on_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM load_info) {
 }
 
 static ErlNifFunc egpgme_funcs[] = {
+    {"strerror", 1, egpgme_strerror},
     {"context", 0, egpgme_context_new}
 };
 

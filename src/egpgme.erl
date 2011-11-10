@@ -1,6 +1,12 @@
 -module(egpgme).
 -on_load(init/0).
 
+% error related functions
+-export([
+    strerror/1
+]).
+
+% context related functions
 -export([
     context/0
 ]).
@@ -17,6 +23,9 @@ init() ->
             filename:join(Dir, ?NIF_NAME)
     end,
     ok = erlang:load_nif(SoName, 0).
+
+strerror(_) ->
+    ?NOT_LOADED.
 
 context() ->
     ?NOT_LOADED.
