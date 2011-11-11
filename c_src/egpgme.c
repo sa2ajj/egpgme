@@ -28,6 +28,26 @@ static void egpgme_context_delete(ErlNifEnv *env, void *arg) {
     gpgme_release(((egpgme_context *)arg)->ctx);
 }
 
+ERL_NIF_TERM egpgme_data_new(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    gpgme_data_t data;
+    gpgme_error_t err = gpgme_data_new(&data);
+
+    if (err) {
+        return _egpgme_error(env, err);
+    } else {
+        ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
+        egpgme_data *e_data = (egpgme_data *)enif_alloc_resource(egpgme_resources[EGPGME_DATA], sizeof(egpgme_data));
+        ERL_NIF_TERM result;
+
+        e_data->data = data;
+        result = enif_make_resource(env, e_data);
+
+        enif_release_resource(e_data);
+
+        return _egpgme_ok(env, result);
+    }
+}
+
 static void egpgme_data_delete(ErlNifEnv *env, void *arg) {
     gpgme_data_release(((egpgme_data *)arg)->data);
 }
@@ -133,7 +153,8 @@ static int on_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM load_info) {
 
 static ErlNifFunc egpgme_funcs[] = {
     {"strerror", 1, egpgme_strerror},
-    {"context", 0, egpgme_context_new}
+    {"context", 0, egpgme_context_new},
+    {"data", 0, egpgme_data_new}
 };
 
 ERL_NIF_INIT(egpgme, egpgme_funcs, &on_load, NULL, NULL, NULL)
