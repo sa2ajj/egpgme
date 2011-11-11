@@ -139,6 +139,8 @@ static int on_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM load_info) {
     }
 
     gpgme_check_version(NULL);
+    // NOTE: enif does not support encodings other than latin-1,
+    // so the code below needs to be rethought
     gpgme_set_locale(NULL, LC_CTYPE, setlocale(LC_CTYPE, NULL));
 #ifdef LC_MESSAGES
     gpgme_set_locale(NULL, LC_MESSAGES, setlocale(LC_MESSAGES, NULL));
