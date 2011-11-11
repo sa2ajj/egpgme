@@ -1,6 +1,8 @@
 -module(egpgme).
 -on_load(init/0).
 
+-include("egpgme.hrl").
+
 % error related functions
 -export([
     strerror/1
