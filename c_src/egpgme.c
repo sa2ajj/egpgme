@@ -89,6 +89,16 @@ ERL_NIF_TERM egpgme_strerror(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]
     return _egpgme_strerror(env, gpgme_err_make(source, code));
 }
 
+ERL_NIF_TERM egpgme_algo_name(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    int algo;
+
+    if (!enif_get_int(env, argv[0], &algo)) {
+        return enif_make_badarg(env);
+    }
+
+    return enif_make_string(env, gpgme_pubkey_algo_name(algo), ERL_NIF_LATIN1);
+}
+
 ERL_NIF_TERM egpgme_protocol_name(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     int protocol;
 
@@ -166,6 +176,7 @@ static int on_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM load_info) {
 static ErlNifFunc egpgme_funcs[] = {
     {"strerror", 1, egpgme_strerror},
     {"protocol_name", 1, egpgme_protocol_name},
+    {"algo_name", 1, egpgme_algo_name},
     {"context", 0, egpgme_context_new},
     {"data", 0, egpgme_data_new}
 };
