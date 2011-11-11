@@ -47,7 +47,7 @@
 
 % key related functions
 -export([
-    key/4
+    key/3
 ]).
 
 % operations
@@ -189,7 +189,7 @@ set_encoding(_, _) ->
 % }}}
 
 %% {{{ Key related functions
-key(_, _, _, _) ->
+key(_, _, _) ->
     ?NOT_LOADED.
 %% }}}
 
