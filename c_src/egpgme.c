@@ -2,14 +2,6 @@
 
 #define EGPGME_MODULE_STR  "egpgme"
 
-typedef struct {
-    gpgme_key_t key;
-} egpgme_key;
-
-static void egpgme_key_delete(ErlNifEnv *env, void *arg) {
-    gpgme_key_release(((egpgme_key *)arg)->key);
-}
-
 ERL_NIF_TERM egpgme_error(ErlNifEnv *env, ERL_NIF_TERM err) {
     return enif_make_tuple2(env, enif_make_atom(env, "error"), err);
 }

@@ -50,4 +50,6 @@ enum {
     ERL_NIF_TERM egpgme_data_seek(ErlNifEnv *, int, const ERL_NIF_TERM []);
     ERL_NIF_TERM egpgme_data_encoding(ErlNifEnv *, int, const ERL_NIF_TERM []);
     ERL_NIF_TERM egpgme_data_set_encoding(ErlNifEnv *, int, const ERL_NIF_TERM []);
+
+    void egpgme_key_delete(ErlNifEnv *, void *);
 #endif
