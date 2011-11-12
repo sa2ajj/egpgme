@@ -147,7 +147,13 @@ static ErlNifFunc egpgme_funcs[] = {
     {"sig_notation_add", 4, egpgme_context_sig_notation_add},
     {"sig_notation", 1, egpgme_context_sig_notation},
 #endif
-    {"data", 0, egpgme_data_new}
+    {"data", 0, egpgme_data_new},
+    {"data", 1, egpgme_data_new},
+    {"read", 2, egpgme_data_read},
+    {"write", 2, egpgme_data_write},
+    {"seek", 3, egpgme_data_seek},
+    {"encoding", 1, egpgme_data_encoding},
+    {"set_encoding", 2, egpgme_data_set_encoding}
 };
 
 ERL_NIF_INIT(egpgme, egpgme_funcs, &on_load, NULL, NULL, NULL)
