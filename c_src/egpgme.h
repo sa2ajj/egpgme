@@ -43,4 +43,5 @@ enum {
     ERL_NIF_TERM egpgme_context_sig_notation(ErlNifEnv *, int, const ERL_NIF_TERM []);
 
     ERL_NIF_TERM egpgme_data_new(ErlNifEnv *, int, const ERL_NIF_TERM []);
+    void egpgme_data_delete(ErlNifEnv *, void *);
 #endif

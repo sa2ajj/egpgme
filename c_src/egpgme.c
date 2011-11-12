@@ -3,16 +3,8 @@
 #define EGPGME_MODULE_STR  "egpgme"
 
 typedef struct {
-    gpgme_data_t data;
-} egpgme_data;
-
-typedef struct {
     gpgme_key_t key;
 } egpgme_key;
-
-static void egpgme_data_delete(ErlNifEnv *env, void *arg) {
-    gpgme_data_release(((egpgme_data *)arg)->data);
-}
 
 static void egpgme_key_delete(ErlNifEnv *env, void *arg) {
     gpgme_key_release(((egpgme_key *)arg)->key);
@@ -28,26 +20,6 @@ ERL_NIF_TERM egpgme_error(ErlNifEnv *env, gpgme_error_t err) {
 
 ERL_NIF_TERM egpgme_ok(ErlNifEnv *env, ERL_NIF_TERM result) {
     return enif_make_tuple2(env, enif_make_atom(env, "ok"), result);
-}
-
-ERL_NIF_TERM egpgme_data_new(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    gpgme_data_t data;
-    gpgme_error_t err = gpgme_data_new(&data);
-
-    if (err) {
-        return egpgme_error(env, err);
-    } else {
-        ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
-        egpgme_data *e_data = (egpgme_data *)enif_alloc_resource(egpgme_resources[EGPGME_DATA], sizeof(egpgme_data));
-        ERL_NIF_TERM result;
-
-        e_data->data = data;
-        result = enif_make_resource(env, e_data);
-
-        enif_release_resource(e_data);
-
-        return egpgme_ok(env, result);
-    }
 }
 
 static ERL_NIF_TERM _egpgme_strerror(ErlNifEnv *env, gpgme_error_t err) {
