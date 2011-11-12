@@ -10,12 +10,15 @@ static void egpgme_key_delete(ErlNifEnv *env, void *arg) {
     gpgme_key_release(((egpgme_key *)arg)->key);
 }
 
-ERL_NIF_TERM egpgme_error(ErlNifEnv *env, gpgme_error_t err) {
+ERL_NIF_TERM egpgme_error(ErlNifEnv *env, ERL_NIF_TERM err) {
+    return enif_make_tuple2(env, enif_make_atom(env, "error"), err);
+}
+
+ERL_NIF_TERM egpgme_gpgme_error(ErlNifEnv *env, gpgme_error_t err) {
     ERL_NIF_TERM source = enif_make_int(env, gpgme_err_source(err));
     ERL_NIF_TERM code = enif_make_int(env, gpgme_err_code(err));
-    ERL_NIF_TERM result = enif_make_tuple2(env, source, code);
 
-    return enif_make_tuple2(env, enif_make_atom(env, "error"), result);
+    return egpgme_error(env, enif_make_tuple2(env, source, code));
 }
 
 ERL_NIF_TERM egpgme_ok(ErlNifEnv *env, ERL_NIF_TERM result) {

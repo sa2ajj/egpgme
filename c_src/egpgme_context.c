@@ -13,7 +13,7 @@ ERL_NIF_TERM egpgme_context_new(ErlNifEnv *env, int argc, const ERL_NIF_TERM arg
     gpgme_error_t err = gpgme_new(&ctx);
 
     if (err) {
-        return egpgme_error(env, err);
+        return egpgme_gpgme_error(env, err);
     } else {
         ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
         egpgme_context *e_ctx = (egpgme_context *)enif_alloc_resource(egpgme_resources[EGPGME_CONTEXT], sizeof(egpgme_context));
@@ -56,7 +56,7 @@ ERL_NIF_TERM egpgme_context_set_protocol(ErlNifEnv *env, int argc, const ERL_NIF
     err = gpgme_set_protocol(e_ctx->ctx, protocol);
 
     if (err) {
-        return egpgme_error(env, err);
+        return egpgme_gpgme_error(env, err);
     } else {
         return enif_make_atom(env, "ok");
     }
@@ -181,7 +181,7 @@ ERL_NIF_TERM egpgme_context_set_keylist_mode(ErlNifEnv *env, int argc, const ERL
     err = gpgme_set_keylist_mode(e_ctx->ctx, mode);
 
     if (err) {
-        return egpgme_error(env, err);
+        return egpgme_gpgme_error(env, err);
     } else {
         return enif_make_atom(env, "ok");
     }

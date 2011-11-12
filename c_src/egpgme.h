@@ -13,7 +13,8 @@ enum {
     EGPGME_LAST
 };
 
-    ERL_NIF_TERM egpgme_error(ErlNifEnv *, gpgme_error_t);
+    ERL_NIF_TERM egpgme_error(ErlNifEnv *, ERL_NIF_TERM);
+    ERL_NIF_TERM egpgme_gpgme_error(ErlNifEnv *, gpgme_error_t);
     ERL_NIF_TERM egpgme_ok(ErlNifEnv *, ERL_NIF_TERM);
 
     ERL_NIF_TERM egpgme_strerror(ErlNifEnv *, int, const ERL_NIF_TERM []);

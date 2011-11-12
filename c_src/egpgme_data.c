@@ -13,7 +13,7 @@ ERL_NIF_TERM egpgme_data_new(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]
     gpgme_error_t err = gpgme_data_new(&data);
 
     if (err) {
-        return egpgme_error(env, err);
+        return egpgme_gpgme_error(env, err);
     } else {
         ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
         egpgme_data *e_data = (egpgme_data *)enif_alloc_resource(egpgme_resources[EGPGME_DATA], sizeof(egpgme_data));
