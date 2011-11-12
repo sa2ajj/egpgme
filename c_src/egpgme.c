@@ -28,6 +28,26 @@ static void egpgme_context_delete(ErlNifEnv *env, void *arg) {
     gpgme_release(((egpgme_context *)arg)->ctx);
 }
 
+static void egpgme_data_delete(ErlNifEnv *env, void *arg) {
+    gpgme_data_release(((egpgme_data *)arg)->data);
+}
+
+static void egpgme_key_delete(ErlNifEnv *env, void *arg) {
+    gpgme_key_release(((egpgme_key *)arg)->key);
+}
+
+static ERL_NIF_TERM _egpgme_error(ErlNifEnv *env, gpgme_error_t err) {
+    ERL_NIF_TERM source = enif_make_int(env, gpgme_err_source(err));
+    ERL_NIF_TERM code = enif_make_int(env, gpgme_err_code(err));
+    ERL_NIF_TERM result = enif_make_tuple2(env, source, code);
+
+    return enif_make_tuple2(env, enif_make_atom(env, "error"), result);
+}
+
+static ERL_NIF_TERM _egpgme_ok(ErlNifEnv *env, ERL_NIF_TERM result) {
+    return enif_make_tuple2(env, enif_make_atom(env, "ok"), result);
+}
+
 ERL_NIF_TERM egpgme_data_new(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     gpgme_data_t data;
     gpgme_error_t err = gpgme_data_new(&data);
@@ -47,13 +67,6 @@ ERL_NIF_TERM egpgme_data_new(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]
         return _egpgme_ok(env, result);
     }
 }
-
-static void egpgme_data_delete(ErlNifEnv *env, void *arg) {
-    gpgme_data_release(((egpgme_data *)arg)->data);
-}
-
-static void egpgme_key_delete(ErlNifEnv *env, void *arg) {
-    gpgme_key_release(((egpgme_key *)arg)->key);
 
 static ERL_NIF_TERM _egpgme_strerror(ErlNifEnv *env, gpgme_error_t err) {
     char *message = enif_alloc(512);
@@ -117,18 +130,6 @@ ERL_NIF_TERM egpgme_protocol_name(ErlNifEnv *env, int argc, const ERL_NIF_TERM a
     }
 
     return enif_make_string(env, gpgme_get_protocol_name(protocol), ERL_NIF_LATIN1);
-}
-
-static ERL_NIF_TERM _egpgme_error(ErlNifEnv *env, gpgme_error_t err) {
-    ERL_NIF_TERM source = enif_make_int(env, gpgme_err_source(err));
-    ERL_NIF_TERM code = enif_make_int(env, gpgme_err_code(err));
-    ERL_NIF_TERM result = enif_make_tuple2(env, source, code);
-
-    return enif_make_tuple2(env, enif_make_atom(env, "error"), result);
-}
-
-static ERL_NIF_TERM _egpgme_ok(ErlNifEnv *env, ERL_NIF_TERM result) {
-    return enif_make_tuple2(env, enif_make_atom(env, "ok"), result);
 }
 
 ERL_NIF_TERM egpgme_context_new(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
