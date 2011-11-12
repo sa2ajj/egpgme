@@ -152,6 +152,201 @@ ERL_NIF_TERM egpgme_context_new(ErlNifEnv *env, int argc, const ERL_NIF_TERM arg
     }
 }
 
+ERL_NIF_TERM egpgme_context_protocol(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
+    egpgme_context *e_ctx;
+
+    if (!enif_get_resource(env, argv[0], egpgme_resources[EGPGME_CONTEXT], (void **)&e_ctx)) {
+        return enif_make_badarg(env);
+    }
+
+    return enif_make_int(env, gpgme_get_protocol(e_ctx->ctx));
+}
+
+ERL_NIF_TERM egpgme_context_set_protocol(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
+    egpgme_context *e_ctx;
+    int protocol;
+    gpgme_error_t err;
+
+    if (!enif_get_resource(env, argv[0], egpgme_resources[EGPGME_CONTEXT], (void **)&e_ctx)) {
+        return enif_make_badarg(env);
+    }
+
+    if (!enif_get_int(env, argv[1], &protocol)) {
+        return enif_make_badarg(env);
+    }
+
+    err = gpgme_set_protocol(e_ctx->ctx, protocol);
+
+    if (err) {
+        return _egpgme_error(env, err);
+    } else {
+        return enif_make_atom(env, "ok");
+    }
+}
+
+ERL_NIF_TERM egpgme_context_armor(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
+    egpgme_context *e_ctx;
+
+    if (!enif_get_resource(env, argv[0], egpgme_resources[EGPGME_CONTEXT], (void **)&e_ctx)) {
+        return enif_make_badarg(env);
+    }
+
+    // Should it return true/false??
+    return enif_make_int(env, gpgme_get_armor(e_ctx->ctx));
+}
+
+ERL_NIF_TERM egpgme_context_set_armor(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
+    egpgme_context *e_ctx;
+    int armor;
+
+    if (!enif_get_resource(env, argv[0], egpgme_resources[EGPGME_CONTEXT], (void **)&e_ctx)) {
+        return enif_make_badarg(env);
+    }
+
+    // should get an atom and check if it is true/false?
+    if (!enif_get_int(env, argv[1], &armor)) {
+        return enif_make_badarg(env);
+    }
+
+    gpgme_set_armor(e_ctx->ctx, armor);
+
+    return enif_make_atom(env, "ok");
+}
+
+ERL_NIF_TERM egpgme_context_textmode(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
+    egpgme_context *e_ctx;
+
+    if (!enif_get_resource(env, argv[0], egpgme_resources[EGPGME_CONTEXT], (void **)&e_ctx)) {
+        return enif_make_badarg(env);
+    }
+
+    // Should it return true/false??
+    return enif_make_int(env, gpgme_get_textmode(e_ctx->ctx));
+}
+
+ERL_NIF_TERM egpgme_context_set_textmode(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
+    egpgme_context *e_ctx;
+    int textmode;
+
+    if (!enif_get_resource(env, argv[0], egpgme_resources[EGPGME_CONTEXT], (void **)&e_ctx)) {
+        return enif_make_badarg(env);
+    }
+
+    // should get an atom and check if it is true/false?
+    if (!enif_get_int(env, argv[1], &textmode)) {
+        return enif_make_badarg(env);
+    }
+
+    gpgme_set_textmode(e_ctx->ctx, textmode);
+
+    return enif_make_atom(env, "ok");
+}
+
+ERL_NIF_TERM egpgme_context_include_certs(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
+    egpgme_context *e_ctx;
+
+    if (!enif_get_resource(env, argv[0], egpgme_resources[EGPGME_CONTEXT], (void **)&e_ctx)) {
+        return enif_make_badarg(env);
+    }
+
+    return enif_make_int(env, gpgme_get_include_certs(e_ctx->ctx));
+}
+
+ERL_NIF_TERM egpgme_context_set_include_certs(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
+    egpgme_context *e_ctx;
+    int nr_of_certs;
+
+    if (!enif_get_resource(env, argv[0], egpgme_resources[EGPGME_CONTEXT], (void **)&e_ctx)) {
+        return enif_make_badarg(env);
+    }
+
+    if (!enif_get_int(env, argv[1], &nr_of_certs)) {
+        return enif_make_badarg(env);
+    }
+
+    gpgme_set_include_certs(e_ctx->ctx, nr_of_certs);
+
+    return enif_make_atom(env, "ok");
+}
+
+ERL_NIF_TERM egpgme_context_keylist_mode(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
+    egpgme_context *e_ctx;
+
+    if (!enif_get_resource(env, argv[0], egpgme_resources[EGPGME_CONTEXT], (void **)&e_ctx)) {
+        return enif_make_badarg(env);
+    }
+
+    return enif_make_uint(env, gpgme_get_keylist_mode(e_ctx->ctx));
+}
+
+ERL_NIF_TERM egpgme_context_set_keylist_mode(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
+    egpgme_context *e_ctx;
+    unsigned mode;
+    gpgme_error_t err;
+
+    if (!enif_get_resource(env, argv[0], egpgme_resources[EGPGME_CONTEXT], (void **)&e_ctx)) {
+        return enif_make_badarg(env);
+    }
+
+    if (!enif_get_uint(env, argv[1], &mode)) {
+        return enif_make_badarg(env);
+    }
+
+    err = gpgme_set_keylist_mode(e_ctx->ctx, mode);
+
+    if (err) {
+        return _egpgme_error(env, err);
+    } else {
+        return enif_make_atom(env, "ok");
+    }
+}
+
+#if 0
+ERL_NIF_TERM egpgme_context_engine_info(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+}
+
+ERL_NIF_TERM egpgme_context_set_engine_info(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+}
+
+ERL_NIF_TERM egpgme_context_signers_clear(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    ErlNifResourceType **egpgme_resources = (ErlNifResourceType **)enif_priv_data(env);
+    egpgme_context *e_ctx;
+
+    if (!enif_get_resource(env, argv[0], egpgme_resources[EGPGME_CONTEXT], (void **)&e_ctx)) {
+        return enif_make_badarg(env);
+    }
+
+    gpgme_signers_clear(e_ctx->ctx);
+
+    return enif_make_atom(env, "ok");
+}
+
+ERL_NIF_TERM egpgme_context_signers_add(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+}
+
+ERL_NIF_TERM egpgme_context_signers_enum(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+}
+
+ERL_NIF_TERM egpgme_context_sig_notation_clear(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+}
+
+ERL_NIF_TERM egpgme_context_sig_notation_add(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+}
+
+ERL_NIF_TERM egpgme_context_sig_notation(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+}
+#endif
+
 static int on_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM load_info) {
     ErlNifResourceType **egpgme_resources = NULL;
 
@@ -190,6 +385,26 @@ static ErlNifFunc egpgme_funcs[] = {
     {"algo_name", 1, egpgme_algo_name},
     {"hash_algo_name", 1, egpgme_hash_algo_name},
     {"context", 0, egpgme_context_new},
+    {"protocol", 1, egpgme_context_protocol},
+    {"set_protocol", 2, egpgme_context_set_protocol},
+    {"armor", 1, egpgme_context_armor},
+    {"set_armor", 2, egpgme_context_set_armor},
+    {"textmode", 1, egpgme_context_textmode},
+    {"set_textmode", 2, egpgme_context_set_textmode},
+    {"include_certs", 1, egpgme_context_include_certs},
+    {"set_include_certs", 2, egpgme_context_set_include_certs},
+    {"keylist_mode", 1, egpgme_context_keylist_mode},
+    {"set_keylist_mode", 2, egpgme_context_set_keylist_mode},
+#if 0
+    {"engine_info", 1, egpgme_context_engine_info},
+    {"set_engine_info", 4, egpgme_context_set_engine_info},
+    {"signers_clear", 1, egpgme_context_signers_clear},
+    {"signers_add", 2, egpgme_context_signers_add},
+    {"signers_enum", 2, egpgme_context_signers_enum},
+    {"sig_notation_clear", 1, egpgme_context_sig_notation_clear},
+    {"sig_notation_add", 4, egpgme_context_sig_notation_add},
+    {"sig_notation", 1, egpgme_context_sig_notation},
+#endif
     {"data", 0, egpgme_data_new}
 };
 
