@@ -47,7 +47,8 @@
 
 % key related functions
 -export([
-    key/3
+    key/3,
+    key_inspect/1
 ]).
 
 % operations
@@ -190,6 +191,9 @@ set_encoding(_, _) ->
 
 %% {{{ Key related functions
 key(_, _, _) ->
+    ?NOT_LOADED.
+
+key_inspect(_) ->
     ?NOT_LOADED.
 %% }}}
 
