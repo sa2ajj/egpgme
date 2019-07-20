@@ -80,18 +80,24 @@
     engine_check_version/1
 ]).
 
--define(NIF_NAME, "egpgme_nif").
 -define(NOT_LOADED, error(nif_not_loaded)).
+-define(APPNAME, egpgme).
+-define(LIBNAME, egpgme_nif).
 
 init() ->
-    SoName = case code:priv_dir(egpgme) of
+    SoName = case code:priv_dir(?APPNAME) of
         {error, bad_name} ->
-            filename:join("../priv", ?NIF_NAME);
-
+            case filelib:is_dir(filename:join(["..", priv])) of
+                true ->
+                    filename:join(["..", priv, ?LIBNAME]);
+                _ ->
+                    filename:join([priv, ?LIBNAME])
+            end;
         Dir ->
-            filename:join(Dir, ?NIF_NAME)
+            filename:join(Dir, ?LIBNAME)
     end,
-    ok = erlang:load_nif(SoName, 0).
+    erlang:load_nif(SoName, 0).
+
 
 % {{{ Helpers
 strerror(_) ->

@@ -1,6 +1,15 @@
 -ifndef(EGPGME_INCLUDED).
 -define(EGPGME_INCLUDED, true).
 
+-export_type([
+
+egpgme_context/0,
+egpgme_data/0,
+egpgme_key/0
+
+]).
+
+
 -opaque egpgme_context() :: binary().
 -opaque egpgme_data() :: binary().
 -opaque egpgme_key() :: binary().
