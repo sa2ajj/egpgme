@@ -1,0 +1,13 @@
+language: erlang
+
+sudo:
+  true
+
+before:
+  apt-get install -y gpgme
+
+otp_release:
+  - 20.0.5
+
+script:
+  make ct
