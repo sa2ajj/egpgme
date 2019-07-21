@@ -3,11 +3,11 @@ language: erlang
 dist: bionic
 
 before:
-  kerl list installations
-  sudo apt-get install -y libgpgme-dev
+  - kerl list installations
+  - sudo apt-get install -y libgpgme-dev
 
 otp_release:
   - 20.0.5
 
 script:
-  make ct
+  - make ct
