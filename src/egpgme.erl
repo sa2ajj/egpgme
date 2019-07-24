@@ -82,7 +82,7 @@
 
 -define(NOT_LOADED, error(nif_not_loaded)).
 -define(APPNAME, egpgme).
--define(LIBNAME, egpgme_nif).
+-define(LIBNAME, egpgme).
 
 init() ->
     SoName = case code:priv_dir(?APPNAME) of
@@ -96,7 +96,11 @@ init() ->
         Dir ->
             filename:join(Dir, ?LIBNAME)
     end,
-    erlang:load_nif(SoName, 0).
+    io:format("SoName : ~p~n",[SoName]),
+    Res = erlang:load_nif(SoName, 0),
+    io:format("Res: ~p~n",[Res]),
+    Res
+    .
 
 
 % {{{ Helpers
