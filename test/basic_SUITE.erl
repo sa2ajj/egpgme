@@ -32,7 +32,11 @@ all() -> [
 init_per_testcase(_, Config) ->
     Dir = ?config(priv_dir, Config),
     os:putenv("GNUPGHOME", Dir),
-    Config.
+    io:format("PRIV DIR=~p~n", [ ?config(priv_dir, Config) ]),
+    io:format("SEARCH DIR=~p~n", [Dir]),
+    Config_2  = lists:keyreplace(priv_dir, 1, Config, {priv_dir,"./priv"}),
+    io:format("Config_2 = ~p~n", [Config_2]),
+    Config_2.
 
 end_per_testcase(_, _Config) ->
     ok.
