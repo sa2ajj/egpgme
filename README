@@ -1,1 +1,6 @@
 This is an attempt to build Erlang NIF around gpgme
+
+
+## License 
+
+GNU Lesser General Public License v2.1

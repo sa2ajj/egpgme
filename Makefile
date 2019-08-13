@@ -1,6 +1,6 @@
-.PHONY: test
+.PHONY: test clean
 
-REBAR := $(shell which rebar || echo $(PWD)/tools/rebar)
+REBAR := rebar3
 
 all: compile test
 
